@@ -9,7 +9,7 @@ void testApp::setup() {
 	// enable depth->video image calibration
 	kinect.setRegistration(true);
     
-	kinect.init();
+	kinect.init(false, false);
 	//kinect.init(true); // shows infrared instead of RGB video image
 	//kinect.init(false, false); // disable video image (faster fps)
 	kinect.open();
