@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxOpenCv.h"
 #include "ofxKinect.h"
+#include <vector>
 
 // uncomment this to read from two kinects simultaneously
 //#define USE_TWO_KINECTS
@@ -50,6 +51,7 @@ public:
     
     //Taglines Vars
     int blobAreaThreshold;
+    vector<ofxCvBlob>  people;
     
     ofImage tagline;
 };

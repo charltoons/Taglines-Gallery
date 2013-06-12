@@ -1,5 +1,4 @@
 #include "testApp.h"
-#include <vector>
 
 
 //--------------------------------------------------------------
@@ -81,7 +80,7 @@ void testApp::update() {
 		// also, find holes is set to true so we will get interior contours as well....
 		contourFinder.findContours(grayImage, 10, (kinect.width*kinect.height)/2, 20, false);
         
-        vector<ofxCvBlob>  people;
+        people.clear();
         for( int i = 0; i < contourFinder.blobs.size(); i++){
             if (contourFinder.blobs.at(i).area > blobAreaThreshold) people.push_back(contourFinder.blobs.at(i));
         }
@@ -119,7 +118,10 @@ void testApp::draw() {
 //	<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl;
 //	ofDrawBitmapString(reportStream.str(),20,652);
     
-    tagline.draw(10,10, 100, 100);
+    if (people.size() > 0) {
+        tagline.draw(10,10, 100, 100);
+        cout << people.at(0).centroid.x << endl;
+    }
 }
 
 void testApp::drawPointCloud() {
