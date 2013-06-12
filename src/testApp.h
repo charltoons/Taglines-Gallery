@@ -47,4 +47,7 @@ public:
 	
 	// used for viewing the point cloud
 	ofEasyCam easyCam;
+    
+    //Taglines Vars
+    int blobAreaThreshold;
 };

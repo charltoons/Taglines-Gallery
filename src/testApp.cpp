@@ -1,4 +1,5 @@
 #include "testApp.h"
+#include <vector>
 
 
 //--------------------------------------------------------------
@@ -24,17 +25,20 @@ void testApp::setup() {
 	grayThreshFar.allocate(kinect.width, kinect.height);
 	
 	nearThreshold = 230;
-	farThreshold = 70;
+	farThreshold = 100;
 	bThreshWithOpenCV = true;
 	
 	ofSetFrameRate(60);
 	
 	// zero the tilt on startup
-	angle = 0;
+	angle = 18;
 	kinect.setCameraTiltAngle(angle);
 	
 	// start from the front
 	bDrawPointCloud = false;
+    
+    //Blob Area Threshold
+    blobAreaThreshold = 10000;
 }
 
 //--------------------------------------------------------------
@@ -79,6 +83,12 @@ void testApp::update() {
 		// find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
 		// also, find holes is set to true so we will get interior contours as well....
 		contourFinder.findContours(grayImage, 10, (kinect.width*kinect.height)/2, 20, false);
+        
+        vector<ofxCvBlob>  people;
+        for( int i = 0; i < contourFinder.blobs.size(); i++){
+            if (contourFinder.blobs.at(i).area > blobAreaThreshold) people.push_back(contourFinder.blobs.at(i));
+        }
+        contourFinder.blobs = people;
 	}
 	
 #ifdef USE_TWO_KINECTS
@@ -96,12 +106,9 @@ void testApp::draw() {
 		drawPointCloud();
 		easyCam.end();
 	} else {
-		// draw from the live kinect
-		kinect.drawDepth(10, 10, 400, 300);
-		kinect.draw(420, 10, 400, 300);
 		
-		grayImage.draw(10, 320, 400, 300);
-		contourFinder.draw(10, 320, 400, 300);
+		grayImage.draw(10, 10);
+		contourFinder.draw(10, 10);
 		
 #ifdef USE_TWO_KINECTS
 		kinect2.draw(420, 320, 400, 300);
@@ -109,19 +116,19 @@ void testApp::draw() {
 	}
 	
 	// draw instructions
-	ofSetColor(255, 255, 255);
-	stringstream reportStream;
-	reportStream << "accel is: " << ofToString(kinect.getMksAccel().x, 2) << " / "
-	<< ofToString(kinect.getMksAccel().y, 2) << " / "
-	<< ofToString(kinect.getMksAccel().z, 2) << endl
-	<< "press p to switch between images and point cloud, rotate the point cloud with the mouse" << endl
-	<< "using opencv threshold = " << bThreshWithOpenCV <<" (press spacebar)" << endl
-	<< "set near threshold " << nearThreshold << " (press: + -)" << endl
-	<< "set far threshold " << farThreshold << " (press: < >) num blobs found " << contourFinder.nBlobs
-	<< ", fps: " << ofGetFrameRate() << endl
-	<< "press c to close the connection and o to open it again, connection is: " << kinect.isConnected() << endl
-	<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl;
-	ofDrawBitmapString(reportStream.str(),20,652);
+//	ofSetColor(255, 255, 255);
+//	stringstream reportStream;
+//	reportStream << "accel is: " << ofToString(kinect.getMksAccel().x, 2) << " / "
+//	<< ofToString(kinect.getMksAccel().y, 2) << " / "
+//	<< ofToString(kinect.getMksAccel().z, 2) << endl
+//	<< "press p to switch between images and point cloud, rotate the point cloud with the mouse" << endl
+//	<< "using opencv threshold = " << bThreshWithOpenCV <<" (press spacebar)" << endl
+//	<< "set near threshold " << nearThreshold << " (press: + -)" << endl
+//	<< "set far threshold " << farThreshold << " (press: < >) num blobs found " << contourFinder.nBlobs
+//	<< ", fps: " << ofGetFrameRate() << endl
+//	<< "press c to close the connection and o to open it again, connection is: " << kinect.isConnected() << endl
+//	<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl;
+//	ofDrawBitmapString(reportStream.str(),20,652);
 }
 
 void testApp::drawPointCloud() {
