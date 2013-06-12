@@ -34,7 +34,20 @@ void testApp::setup() {
     //Blob Area Threshold
     blobAreaThreshold = 10000;
     
-    tagline.loadImage("images/pug.jpg");
+    //some path, may be absolute or relative to bin/data
+    string path = "images";
+    ofDirectory dir(path);
+    //only show png files
+    //dir.allowExt("png");
+    //populate the directory object
+    dir.listDir();
+    
+    //go through the images folder and load all the images
+    for(int i = 0; i < dir.numFiles(); i++){
+        ofImage newPortrait;
+        newPortrait.loadImage(dir.getPath(i));
+        portraits.push_back(newPortrait);
+    }
 }
 
 //--------------------------------------------------------------
@@ -52,26 +65,11 @@ void testApp::update() {
 		
 		// we do two thresholds - one for the far plane and one for the near plane
 		// we then do a cvAnd to get the pixels which are a union of the two thresholds
-		if(bThreshWithOpenCV) {
-			grayThreshNear = grayImage;
-			grayThreshFar = grayImage;
-			grayThreshNear.threshold(nearThreshold, true);
-			grayThreshFar.threshold(farThreshold);
-			cvAnd(grayThreshNear.getCvImage(), grayThreshFar.getCvImage(), grayImage.getCvImage(), NULL);
-		} else {
-			
-			// or we do it ourselves - show people how they can work with the pixels
-			unsigned char * pix = grayImage.getPixels();
-			
-			int numPixels = grayImage.getWidth() * grayImage.getHeight();
-			for(int i = 0; i < numPixels; i++) {
-				if(pix[i] < nearThreshold && pix[i] > farThreshold) {
-					pix[i] = 255;
-				} else {
-					pix[i] = 0;
-				}
-			}
-		}
+        grayThreshNear = grayImage;
+        grayThreshFar = grayImage;
+        grayThreshNear.threshold(nearThreshold, true);
+        grayThreshFar.threshold(farThreshold);
+        cvAnd(grayThreshNear.getCvImage(), grayThreshFar.getCvImage(), grayImage.getCvImage(), NULL);
 		
 		// update the cv images
 		grayImage.flagImageChanged();
@@ -79,11 +77,16 @@ void testApp::update() {
 		// find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
 		// also, find holes is set to true so we will get interior contours as well....
 		contourFinder.findContours(grayImage, 10, (kinect.width*kinect.height)/2, 20, false);
-        
+    
+        //empty previous people
         people.clear();
+    
+        //add blobs who meet area threshold back to people vecotr
         for( int i = 0; i < contourFinder.blobs.size(); i++){
             if (contourFinder.blobs.at(i).area > blobAreaThreshold) people.push_back(contourFinder.blobs.at(i));
         }
+    
+        //we're gonna draw the blobs later, so just reset with people
         contourFinder.blobs = people;
 	}
 }
@@ -119,8 +122,7 @@ void testApp::draw() {
 //	ofDrawBitmapString(reportStream.str(),20,652);
     
     if (people.size() > 0) {
-        tagline.draw(10,10, 100, 100);
-        cout << people.at(0).centroid.x << endl;
+        portraits.at(0).draw(people.at(0).centroid.x,10, 100, 100);
     }
 }
 

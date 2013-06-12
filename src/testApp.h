@@ -53,5 +53,5 @@ public:
     int blobAreaThreshold;
     vector<ofxCvBlob>  people;
     
-    ofImage tagline;
+    vector<ofImage> portraits;
 };
