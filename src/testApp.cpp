@@ -14,11 +14,6 @@ void testApp::setup() {
 	//kinect.init(false, false); // disable video image (faster fps)
 	kinect.open();
 	
-#ifdef USE_TWO_KINECTS
-	kinect2.init();
-	kinect2.open();
-#endif
-	
 	colorImg.allocate(kinect.width, kinect.height);
 	grayImage.allocate(kinect.width, kinect.height);
 	grayThreshNear.allocate(kinect.width, kinect.height);
@@ -39,6 +34,8 @@ void testApp::setup() {
     
     //Blob Area Threshold
     blobAreaThreshold = 10000;
+    
+    tagline.loadImage("images/pug.jpg");
 }
 
 //--------------------------------------------------------------
@@ -90,10 +87,6 @@ void testApp::update() {
         }
         contourFinder.blobs = people;
 	}
-	
-#ifdef USE_TWO_KINECTS
-	kinect2.update();
-#endif
 }
 
 //--------------------------------------------------------------
@@ -109,10 +102,6 @@ void testApp::draw() {
 		
 		grayImage.draw(10, 10);
 		contourFinder.draw(10, 10);
-		
-#ifdef USE_TWO_KINECTS
-		kinect2.draw(420, 320, 400, 300);
-#endif
 	}
 	
 	// draw instructions
@@ -129,6 +118,8 @@ void testApp::draw() {
 //	<< "press c to close the connection and o to open it again, connection is: " << kinect.isConnected() << endl
 //	<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl;
 //	ofDrawBitmapString(reportStream.str(),20,652);
+    
+    tagline.draw(10,10, 100, 100);
 }
 
 void testApp::drawPointCloud() {
@@ -160,10 +151,6 @@ void testApp::drawPointCloud() {
 void testApp::exit() {
 	kinect.setCameraTiltAngle(0); // zero the tilt on exit
 	kinect.close();
-	
-#ifdef USE_TWO_KINECTS
-	kinect2.close();
-#endif
 }
 
 //--------------------------------------------------------------

@@ -50,4 +50,6 @@ public:
     
     //Taglines Vars
     int blobAreaThreshold;
+    
+    ofImage tagline;
 };
