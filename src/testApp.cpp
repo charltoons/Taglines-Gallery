@@ -118,7 +118,7 @@ void testApp::draw() {
 //	ofDrawBitmapString(reportStream.str(),20,652);
     
     if (people.size() > 0) {
-        portraits.at(0).draw(people.at(0).centroid.x,10, 100, 100);
+        portraits.at(0).draw(people.at(0).centroid.x,100, 255, 330);
     }
 }
 
