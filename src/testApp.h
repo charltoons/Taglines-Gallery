@@ -56,4 +56,6 @@ public:
     vector<ofImage> portraits;
     
     bool showKinect;
+    
+    float scaleX(float);
 };
