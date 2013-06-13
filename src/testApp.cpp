@@ -48,6 +48,8 @@ void testApp::setup() {
         newPortrait.loadImage(dir.getPath(i));
         portraits.push_back(newPortrait);
     }
+    
+    showKinect = false;
 }
 
 //--------------------------------------------------------------
@@ -95,16 +97,10 @@ void testApp::update() {
 void testApp::draw() {
 	
 	ofSetColor(255, 255, 255);
-	
-	if(bDrawPointCloud) {
-		easyCam.begin();
-		drawPointCloud();
-		easyCam.end();
-	} else {
-		
-		grayImage.draw(10, 10);
-		contourFinder.draw(10, 10);
-	}
+	if (showKinect){
+        grayImage.draw(0, 0);
+        contourFinder.draw(0, 0);
+    }
 	
 	// draw instructions
 //	ofSetColor(255, 255, 255);
@@ -161,60 +157,70 @@ void testApp::exit() {
 void testApp::keyPressed (int key) {
 	switch (key) {
 		case ' ':
-			bThreshWithOpenCV = !bThreshWithOpenCV;
+//			bThreshWithOpenCV = !bThreshWithOpenCV;
 			break;
 			
 		case'p':
-			bDrawPointCloud = !bDrawPointCloud;
+//			bDrawPointCloud = !bDrawPointCloud;
 			break;
 			
 		case '>':
 		case '.':
 			farThreshold ++;
 			if (farThreshold > 255) farThreshold = 255;
+            cout << "Far Thresh: " << farThreshold << endl;
 			break;
 			
 		case '<':
 		case ',':
 			farThreshold --;
 			if (farThreshold < 0) farThreshold = 0;
+            cout << "Far Thresh: " << farThreshold << endl;
 			break;
 			
 		case '+':
 		case '=':
 			nearThreshold ++;
 			if (nearThreshold > 255) nearThreshold = 255;
+            cout << "Near Thresh: " << farThreshold << endl;
 			break;
 			
 		case '-':
 			nearThreshold --;
 			if (nearThreshold < 0) nearThreshold = 0;
+            cout << "Near Thresh: " << farThreshold << endl;
 			break;
 			
 		case 'w':
-			kinect.enableDepthNearValueWhite(!kinect.isDepthNearValueWhite());
+//			kinect.enableDepthNearValueWhite(!kinect.isDepthNearValueWhite());
 			break;
 			
 		case 'o':
-			kinect.setCameraTiltAngle(angle); // go back to prev tilt
-			kinect.open();
+//			kinect.setCameraTiltAngle(angle); // go back to prev tilt
+//			kinect.open();
 			break;
 			
 		case 'c':
-			kinect.setCameraTiltAngle(0); // zero the tilt
-			kinect.close();
+//			kinect.setCameraTiltAngle(0); // zero the tilt
+//			kinect.close();
 			break;
+        case 'x':
+            showKinect = !showKinect;
+            cout << "showKinect: " << showKinect << endl;
+            break;
 			
 		case OF_KEY_UP:
 			angle++;
 			if(angle>30) angle=30;
 			kinect.setCameraTiltAngle(angle);
+            cout << "Kinect Angle: " << angle << endl;
 			break;
 			
 		case OF_KEY_DOWN:
 			angle--;
 			if(angle<-30) angle=-30;
 			kinect.setCameraTiltAngle(angle);
+            cout << "Kinect Angle: " << angle << endl;
 			break;
 	}
 }

@@ -54,4 +54,6 @@ public:
     vector<ofxCvBlob>  people;
     
     vector<ofImage> portraits;
+    
+    bool showKinect;
 };
