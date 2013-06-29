@@ -18,14 +18,14 @@ void testApp::setup() {
 	grayThreshNear.allocate(kinect.width, kinect.height);
 	grayThreshFar.allocate(kinect.width, kinect.height);
 	
-	nearThreshold = 230;
-	farThreshold = 100;
+	nearThreshold = 255;
+	farThreshold = 00;
 	bThreshWithOpenCV = true;
 	
 	ofSetFrameRate(60);
 	
 	// zero the tilt on startup
-	angle = 18;
+	angle = 3;
 	kinect.setCameraTiltAngle(angle);
 	
 	// start from the front
@@ -49,7 +49,7 @@ void testApp::setup() {
         portraits.push_back(newPortrait);
     }
     
-    showKinect = false;
+    showKinect = true;
 }
 
 //--------------------------------------------------------------
@@ -118,7 +118,7 @@ void testApp::draw() {
 //	ofDrawBitmapString(reportStream.str(),20,652);
     
     if (people.size() > 0) {
-        portraits.at(0).draw(scaleX(people.at(0).centroid.x),100, 255, 330);
+        portraits.at(0).draw((1280-scaleX(people.at(0).centroid.x)),100, 255, 330);
     }
 }
 
@@ -217,5 +217,5 @@ void testApp::windowResized(int w, int h)
 {}
 
 float testApp::scaleX(float x){
-    return (x * 1280) / kinect.width;
+    return (x * 2560) / kinect.width;
 }
